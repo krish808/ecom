@@ -1,0 +1,7 @@
+72v6bCCuMZLZFqXk
+
+ecom
+
+mongosh "mongodb+srv://cluster0.6f3s8j2.mongodb.net/" --apiVersion 1 --username ecom --password 72v6bCCuMZLZFqXk
+
+mongodb+srv://ecom:72v6bCCuMZLZFqXk@cluster0.6f3s8j2.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
