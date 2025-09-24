@@ -1,22 +1,22 @@
-const express = require('express')
-const { protect } = require("../middleware/authMiddleware")
-const {
+import express from "express";
+import { protect } from "../middleware/authMiddleware.js";
+import {
   getProducts,
   getProductById,
   createProduct,
   updateProduct,
-  deleteProduct
-} = require('../controllers/productController')
+  deleteProduct,
+} from "../controllers/productController.js";
 
-const router = express.Router()
+const router = express.Router();
 
 // Public routes
-router.get('/', getProducts)
-router.get('/:id', getProductById)
+router.get("/", getProducts);
+router.get("/:id", getProductById);
 
 // Protected routes (later we’ll restrict to admin)
-router.post('/', protect, createProduct)
-router.put('/:id', protect, updateProduct)
-router.delete('/:id', protect, deleteProduct)
+router.post("/", protect, createProduct);
+router.put("/:id", protect, updateProduct);
+router.delete("/:id", protect, deleteProduct);
 
-module.exports = router
+export default router;

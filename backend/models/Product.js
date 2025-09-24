@@ -1,13 +1,15 @@
-const mongoose = require('mongoose')
-const { stack } = require('../routes/authRoutes')
+const mongoose = require("mongoose");
 
-const productSchema =new mongoose.Schema({
-    name:{type:String,required:true},
-    description:{type:String},
-    price:{type:Number,required:true},
-    category:{type:String},
-    stock:{type:Number,default:0},
-    image:{type:String}
-},{timestamps:true}) 
+const productSchema = new mongoose.Schema(
+  {
+    name: { type: String, required: [true, "Product name is required"] },
+    description: { type: String },
+    price: { type: Number, required: [true, "Price is required"] },
+    category: { type: String, required: true },
+    stock: { type: Number, default: 0 },
+    image: { type: String, required: true },
+  },
+  { timestamps: true }
+);
 
-module.exports=mongoose.model("Product",productSchema)
+module.exports = mongoose.model("Product", productSchema);

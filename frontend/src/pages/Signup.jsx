@@ -8,11 +8,9 @@ import {
   CircularProgress,
   Box,
 } from "@mui/material";
-import { useNavigate } from "react-router-dom";
 
 const Signup = () => {
   const dispatch = useDispatch();
-  const navigate = useNavigate();
   const { loading, error, success } = useSelector((state) => state.auth);
 
   const [form, setForm] = useState({ name: "", email: "", password: "" });
@@ -24,7 +22,6 @@ const Signup = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     dispatch(signupUser(form));
-    navigate("/");
   };
 
   return (

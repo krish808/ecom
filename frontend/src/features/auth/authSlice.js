@@ -18,6 +18,21 @@ const storage = {
   },
 };
 
+// --- Helper: check token expiry
+const getTokenData = () => {
+  const token = storage.getItem("token");
+  const user = storage.getItem("user");
+  const expiry = storage.getItem("tokenExpiry");
+
+  if (!token || !expiry || new Date().getTime() > Number(expiry)) {
+    storage.removeItem("token");
+    storage.removeItem("user");
+    storage.removeItem("tokenExpiry");
+    return { token: null, user: null };
+  }
+  return { token, user: JSON.parse(user) };
+};
+
 // Async Thunks
 export const signupUser = createAsyncThunk(
   "auth/signupUser",
@@ -28,6 +43,12 @@ export const signupUser = createAsyncThunk(
         email,
         password,
       });
+
+      // Save token + expiry
+      const expiryTime = new Date().getTime() + 24 * 60 * 60 * 1000; // 24 hours
+      storage.setItem("token", data.token);
+      storage.setItem("user", JSON.stringify({ name, email }));
+      storage.setItem("tokenExpiry", expiryTime);
 
       return { user: { name, email }, token: data.token };
     } catch (err) {
@@ -42,8 +63,10 @@ export const loginUser = createAsyncThunk(
     try {
       const { data } = await api.post("/auth/login", { email, password });
 
+      const expiryTime = new Date().getTime() + 24 * 60 * 60 * 1000; // 24 hours
       storage.setItem("token", data.token);
       storage.setItem("user", JSON.stringify(data.user));
+      storage.setItem("tokenExpiry", expiryTime);
 
       return { user: data.user, token: data.token };
     } catch (err) {
@@ -56,8 +79,7 @@ export const loginUser = createAsyncThunk(
 const authSlice = createSlice({
   name: "auth",
   initialState: {
-    user: JSON.parse(storage.getItem("user")) || null,
-    token: storage.getItem("token") || null,
+    ...getTokenData(),
     loading: false,
     error: null,
     success: null,
@@ -69,6 +91,7 @@ const authSlice = createSlice({
       state.success = null;
       storage.removeItem("token");
       storage.removeItem("user");
+      storage.removeItem("tokenExpiry");
     },
   },
   extraReducers: (builder) => {
@@ -83,7 +106,6 @@ const authSlice = createSlice({
         state.user = action.payload.user;
         state.token = action.payload.token;
         state.success = "Signup successful!";
-        // optional: storage.setItem("token", action.payload.token);
       })
       .addCase(signupUser.rejected, (state, action) => {
         state.loading = false;
@@ -100,8 +122,6 @@ const authSlice = createSlice({
         state.loading = false;
         state.user = action.payload.user;
         state.token = action.payload.token;
-        storage.setItem("token", action.payload.token);
-        storage.setItem("user", JSON.stringify(action.payload.user));
       })
       .addCase(loginUser.rejected, (state, action) => {
         state.loading = false;
