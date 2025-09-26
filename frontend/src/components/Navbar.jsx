@@ -26,6 +26,10 @@ function Navbar() {
         </Typography>
 
         <Box>
+          <Button color="inherit" component={Link} to="/products">
+            Products
+          </Button>
+
           {!user ? (
             <>
               <Button color="inherit" component={Link} to="/login">
@@ -37,7 +41,12 @@ function Navbar() {
             </>
           ) : (
             <>
-              <Typography color="inherit" component={Link} to="/dashboard">
+              <Typography
+                color="inherit"
+                component={Link}
+                to="/dashboard"
+                sx={{ mx: 1 }}
+              >
                 Welcome, {user.name}
               </Typography>
               <Button color="inherit" onClick={handleLogout}>

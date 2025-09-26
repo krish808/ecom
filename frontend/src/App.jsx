@@ -5,6 +5,8 @@ import Signup from "./pages/Signup";
 import Navbar from "./components/Navbar";
 import AuthRoute from "./routes/AuthRoute";
 import Dashboard from "./pages/Dashboard";
+import ProductList from "./pages/ProductList";
+import ProductDetails from "./pages/ProductDetails";
 
 function App() {
   return (
@@ -35,6 +37,9 @@ function App() {
             </AuthRoute>
           }
         />
+        <Route path="/products" element={<ProductList />} />
+        <Route path="/products/:id" element={<ProductDetails />} />
+
         <Route path="/" element={<Navigate to="/dashboard" />} />
       </Routes>
     </>
