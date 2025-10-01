@@ -25,13 +25,22 @@ export const getProductById = async (req, res) => {
 export const createProduct = async (req, res) => {
   try {
     const { name, description, price, category, stock, image } = req.body;
+
+    if (!name || !price || stock == null) {
+      return res
+        .status(400)
+        .json({ message: "Name, price, and stock are required" });
+    }
+
+    const imagePath = req.file ? `/uploads/${req.file.filename}` : null;
+
     const product = new Product({
       name,
       description,
       price,
       category,
       stock,
-      image,
+      image: imagePath,
     });
     await product.save();
     res.status(201).json(product); // ✅ fixed
@@ -43,11 +52,14 @@ export const createProduct = async (req, res) => {
 // Update product (admin only)
 export const updateProduct = async (req, res) => {
   try {
-    const product = await Product.findById(req.params.id);
+    const product = await Product.findByIdAndUpdate(
+      req.params.id,
+      req.body,
+      { new: true, runValidators: true } // ✅ return updated doc + validation
+    );
+
     if (!product) return res.status(404).json({ message: "Product not found" });
 
-    Object.assign(product, req.body);
-    await product.save();
     res.status(200).json(product);
   } catch (err) {
     res.status(400).json({ error: err.message });

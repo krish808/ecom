@@ -1,4 +1,4 @@
-import { AppBar, Toolbar, Typography, Button, Box } from "@mui/material";
+import { AppBar, Toolbar, Typography, Button, Box, Badge } from "@mui/material";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../features/auth/authSlice";
@@ -7,6 +7,9 @@ function Navbar() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { user } = useSelector((state) => state.auth);
+  const { items } = useSelector((state) => state.cart);
+
+  const totalQty = items.reduce((acc, item) => acc + item.qty, 0);
 
   const handleLogout = () => {
     dispatch(logout());
@@ -28,6 +31,12 @@ function Navbar() {
         <Box>
           <Button color="inherit" component={Link} to="/products">
             Products
+          </Button>
+
+          <Button color="inherit" component={Link} to="/cart">
+            <Badge badgeContent={totalQty} color="error">
+              Cart
+            </Badge>
           </Button>
 
           {!user ? (

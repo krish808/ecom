@@ -7,6 +7,8 @@ import AuthRoute from "./routes/AuthRoute";
 import Dashboard from "./pages/Dashboard";
 import ProductList from "./pages/ProductList";
 import ProductDetails from "./pages/ProductDetails";
+import AdminProducts from "./pages/AdminProducts";
+import Cart from "./pages/Cart";
 
 function App() {
   return (
@@ -40,7 +42,17 @@ function App() {
         <Route path="/products" element={<ProductList />} />
         <Route path="/products/:id" element={<ProductDetails />} />
 
+        <Route
+          path="/admin/products"
+          element={
+            <AuthRoute type="private" role="admin">
+              <AdminProducts />
+            </AuthRoute>
+          }
+        />
+
         <Route path="/" element={<Navigate to="/dashboard" />} />
+        <Route path="/cart" element={<Cart />} />
       </Routes>
     </>
   );

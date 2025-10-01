@@ -1,5 +1,5 @@
 import express from "express";
-import { protect } from "../middleware/authMiddleware.js";
+import { admin, protect } from "../middleware/authMiddleware.js";
 import {
   getProducts,
   getProductById,
@@ -7,6 +7,7 @@ import {
   updateProduct,
   deleteProduct,
 } from "../controllers/productController.js";
+import upload from "../middleware/uploadMiddleware.js";
 
 const router = express.Router();
 
@@ -15,8 +16,8 @@ router.get("/", getProducts);
 router.get("/:id", getProductById);
 
 // Protected routes (later we’ll restrict to admin)
-router.post("/", protect, createProduct);
-router.put("/:id", protect, updateProduct);
-router.delete("/:id", protect, deleteProduct);
+router.post("/", upload.single("image"), protect, admin, createProduct);
+router.put("/:id", protect, admin, updateProduct);
+router.delete("/:id", protect, admin, deleteProduct);
 
 export default router;
